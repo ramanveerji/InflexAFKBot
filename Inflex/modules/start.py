@@ -62,7 +62,7 @@ async def on_help(_, message: Message):
 async def on_private_start(_, message: Message):
     if len(message.text.split()) > 1:
         name = message.text.split(None, 1)[1]
-        if name[0:4] == "help":
+        if name[:4] == "help":
             return await message.reply_text(HELP_TEXT)
     else:
         bot_uptime = int(time.time() - boot)
@@ -103,9 +103,7 @@ async def on_settings_button(client, CallbackQuery):
 @app.on_callback_query(filters.regex("CLEANMODE"))
 async def on_cleanmode_change(client, CallbackQuery):
     admin = await app.get_chat_member(CallbackQuery.message.chat.id, CallbackQuery.from_user.id)
-    if admin.status in ["creator", "administrator"]:
-        pass
-    else:
+    if admin.status not in ["creator", "administrator"]:
         return await CallbackQuery.answer("Only Admins can perform this action.", show_alert=True)
     await CallbackQuery.answer()
     status = None
